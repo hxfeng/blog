@@ -1,0 +1,670 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content=",,," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文记录了msql的常用命令和常见问题的解决办法">
+<meta name="keywords" content="sql">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mysql 常用命令及常见问题和解决方法">
+<meta property="og:url" content="https://hxfeng.github.io/file_posts/mysql.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="本文记录了msql的常用命令和常见问题的解决办法">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-05-29T10:13:34.628Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql 常用命令及常见问题和解决方法">
+<meta name="twitter:description" content="本文记录了msql的常用命令和常见问题的解决办法">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hxfeng.github.io/file_posts/mysql.html"/>
+
+
+
+
+
+  <title>
+  
+
+  
+    mysql 常用命令及常见问题和解决方法 | 在路上
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">在路上</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">人不能太舒服，太舒服就会有问题，so解决问题ing</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">mysql 常用命令及常见问题和解决方法</h1>
+
+
+
+</header>
+
+    
+    
+      <p>本文记录了msql的常用命令和常见问题的解决办法<br><a id="more"></a></p>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ol>
+<li><p>连接<br>可以通过命令行直接连接，也可以通过代码连接，通过代码连接时要选择合适的驱动，连接时编码格式不一致会导致查询乱码。</p>
+<blockquote>
+<p>格式： mysql -h主机地址 -u用户名 －p用户密码<br>jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=gbk</p>
+</blockquote>
+</li>
+<li><p>修改密码</p>
+<blockquote>
+<p>格式：mysqladmin -u用户名 -p旧密码 password 新密码</p>
+</blockquote>
+</li>
+<li><p>添加用户</p>
+<blockquote>
+<p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grant all on database.* to user@hostname identified by "xxxx"</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>创建数据库</p>
+<blockquote>
+<p>命令：create database &lt;数据库名&gt;</p>
+</blockquote>
+</li>
+<li><p>显示信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">databases</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">tables</span></span><br><span class="line"><span class="keyword">desc</span> tablename</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除表，删除库</p>
+<blockquote>
+<p>drop database xxx<br>drop table  xxx</p>
+</blockquote>
+</li>
+<li><p>删除符合条件的记录</p>
+<blockquote>
+<p>delete from xxx where xxx=xxx</p>
+</blockquote>
+</li>
+<li><p>查看版本</p>
+<blockquote>
+<p>select version(); </p>
+</blockquote>
+</li>
+<li><p>显示时间<br>select now()</p>
+</li>
+<li><p>创建表</p>
+<blockquote>
+<p>create table &lt;表名&gt; ( &lt;字段名1&gt; &lt;类型1&gt; [,..&lt;字段名n&gt; &lt;类型n&gt;]);</p>
+</blockquote>
+</li>
+<li><p>插入数据</p>
+<blockquote>
+<p>命令：insert into &lt;表名&gt; [( &lt;字段名1&gt;[,..&lt;字段名n &gt; ])] values ( 值1 )[, ( 值n )]</p>
+</blockquote>
+</li>
+<li><p>修改表中数据</p>
+<blockquote>
+<p>语法：update 表名 set 字段=新值,… where 条件</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="root-远程连接问题"><a href="#root-远程连接问题" class="headerlink" title="root 远程连接问题"></a>root 远程连接问题</h1><p>允许mysql远程访问,可以使用以下三种方式:</p>
+<p>a、改use表。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root –p</span><br><span class="line">mysql&gt;use mysql;</span><br><span class="line">mysql&gt;update user set host = '%' where user = 'root';</span><br><span class="line">mysql&gt;select host, user from user;</span><br></pre></td></tr></table></figure></p>
+<p>b、授权。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">例如，你想root使用123456从任何主机连接到mysql服务器。</span><br><span class="line">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;</span><br><span class="line">如果你想允许用户jack从ip为10.10.50.127的主机连接到mysql服务器，并使用654321作为密码</span><br><span class="line">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'jack'@’10.10.50.127’ IDENTIFIED BY '654321' WITH GRANT OPTION;</span><br><span class="line">mysql&gt;FLUSH RIVILEGES</span><br></pre></td></tr></table></figure></p>
+<p>c:在安装mysql的机器上运行：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//进入MySQL服务器</span><br><span class="line">mysql -h localhost -u root</span><br><span class="line">//赋予任何主机访问数据的权限</span><br><span class="line">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION</span><br><span class="line">//使修改生效</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES</span><br><span class="line">//退出MySQL服务器</span><br><span class="line">mysql&gt;EXIT</span><br></pre></td></tr></table></figure></p>
+<h1 id="中文编码问题"><a href="#中文编码问题" class="headerlink" title="中文编码问题"></a>中文编码问题</h1><p>MySQL会出现中文乱码的原因不外乎下列几点：</p>
+<ol>
+<li>server本身设定问题，例如还停留在latin1</li>
+<li>table的语系设定问题(包含character与collation)</li>
+<li>客户端程式的连线语系设定问题<br>强烈建议使用utf8!!!!  utf8可以兼容世界上所有字符!!!!<br><strong>避免创建数据库及表出现中文乱码和查看编码方法</strong></li>
+</ol>
+<h2 id="创建数据库的时候指定字符编码格式："><a href="#创建数据库的时候指定字符编码格式：" class="headerlink" title="创建数据库的时候指定字符编码格式："></a>创建数据库的时候指定字符编码格式：</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`test`</span>  </span><br><span class="line"><span class="built_in">CHARACTER</span> <span class="keyword">SET</span> <span class="string">'utf8'</span>  </span><br><span class="line"><span class="keyword">COLLATE</span> <span class="string">'utf8_general_ci'</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="建表的时候指定表的编码格式"><a href="#建表的时候指定表的编码格式" class="headerlink" title="建表的时候指定表的编码格式"></a>建表的时候指定表的编码格式</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`database_user`</span> (  </span><br><span class="line"><span class="string">`ID`</span> <span class="built_in">varchar</span>(<span class="number">40</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">''</span>,  </span><br><span class="line"><span class="string">`UserID`</span> <span class="built_in">varchar</span>(<span class="number">40</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">''</span>,  </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+<p>这3个设置好了，基本就不会出问题了,即建库和建表时都使用相同的编码格式。<br>但是如果你已经建了库和表可以通过以下方式进行查询。</p>
+<h2 id="查看默认的编码格式"><a href="#查看默认的编码格式" class="headerlink" title="查看默认的编码格式:"></a>查看默认的编码格式:</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like "%char%";  </span><br><span class="line">+<span class="comment">--------------------------+---------------+  </span></span><br><span class="line">| Variable_name | Value |  </span><br><span class="line">+<span class="comment">--------------------------+---------------+  </span></span><br><span class="line">| character_set_client | gbk |  </span><br><span class="line">| character_set_connection | gbk |  </span><br><span class="line">| character_set_database | utf8 |  </span><br><span class="line">| character_set_filesystem | binary |  </span><br><span class="line">| character_set_results | gbk |  </span><br><span class="line">| character_set_server | utf8 |  </span><br><span class="line">| character_set_system | utf8 |  </span><br><span class="line">+<span class="comment">--------------------------+-------------+</span></span><br></pre></td></tr></table></figure>
+<p>注：以前2个来确定,可以使用set names utf8,set names gbk设置默认的编码格式;<br>执行SET NAMES utf8的效果等同于同时设定如下：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> character_set_client=<span class="string">'utf8'</span>;  </span><br><span class="line"><span class="keyword">SET</span> character_set_connection=<span class="string">'utf8'</span>;  </span><br><span class="line"><span class="keyword">SET</span> character_set_results=<span class="string">'utf8'</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="查看test数据库的编码格式"><a href="#查看test数据库的编码格式" class="headerlink" title="查看test数据库的编码格式:"></a>查看test数据库的编码格式:</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show create database test;  </span><br><span class="line">+<span class="comment">------------+------------------------------------------------------------------------------------------------+  </span></span><br><span class="line">| Database | <span class="keyword">Create</span> <span class="keyword">Database</span> |  </span><br><span class="line">+<span class="comment">------------+------------------------------------------------------------------------------------------------+  </span></span><br><span class="line">| <span class="keyword">test</span> | <span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`test`</span> <span class="comment">/*!40100 DEFAULT CHARACTER SET gbk */</span> |  </span><br><span class="line">+<span class="comment">------------+------------------------------------------------------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看yjdb数据表的编码格式"><a href="#查看yjdb数据表的编码格式" class="headerlink" title="查看yjdb数据表的编码格式:"></a>查看yjdb数据表的编码格式:</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show create table yjdb;  </span><br><span class="line">| yjdb | <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`yjdb`</span> (  </span><br><span class="line"><span class="string">`sn`</span> <span class="built_in">int</span>(<span class="number">5</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,  </span><br><span class="line"><span class="string">`type`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`brc`</span> <span class="built_in">varchar</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`teller`</span> <span class="built_in">int</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`telname`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`date`</span> <span class="built_in">int</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`count`</span> <span class="built_in">int</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line"><span class="string">`back`</span> <span class="built_in">int</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">PRIMARY <span class="keyword">KEY</span> (<span class="string">`sn`</span>),  </span><br><span class="line"><span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`sn`</span> (<span class="string">`sn`</span>),  </span><br><span class="line"><span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`sn_2`</span> (<span class="string">`sn`</span>)  </span><br><span class="line">) <span class="keyword">ENGINE</span>=MyISAM AUTO_INCREMENT=<span class="number">1826</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=gbk ROW_FORMAT=DYNAMIC |</span><br></pre></td></tr></table></figure>
+<h2 id="避免导入数据有中文乱码的问题"><a href="#避免导入数据有中文乱码的问题" class="headerlink" title="避免导入数据有中文乱码的问题"></a>避免导入数据有中文乱码的问题</h2><p>1:将数据编码格式保存为utf-8<br>设置默认编码为utf8：<br>set names utf8;<br>设置数据库db_name默认为utf8:</p>
+<blockquote>
+<p>ALTER DATABASE <code>db_name</code> DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;<br>设置表tb_name默认编码为utf8:<br>ALTER TABLE <code>tb_name</code> DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;<br>导入：<br>[sql] view plain copy<br>LOAD DATA LOCAL INFILE ‘C:\utf8.txt’ INTO TABLE yjdb;<br>导入：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> <span class="keyword">INFILE</span> <span class="string">'/gbk.txt'</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> yjdb;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>注：1.UTF8不要导入gbk，gbk不要导入UTF8;</p>
+<h2 id="解决网页中乱码的问题"><a href="#解决网页中乱码的问题" class="headerlink" title="解决网页中乱码的问题"></a>解决网页中乱码的问题</h2><p> 将网站编码设为 utf-8,这样可以兼容世界上所有字符。<br> 如果网站已经运作了好久,已有很多旧数据,不能再更改简体中文的设定,那么建议将页面的编码设为 GBK, GBK与GB2312的区别就在于:GBK能比GB2312显示更多的字符,要显示简体码的繁体字,就只能用GBK。</p>
+<ol>
+<li>编辑/etc/my.cnf　,在[mysql]段加入default_character_set=utf8;</li>
+<li>在编写Connection URL时，加上?useUnicode=true&amp;characterEncoding=utf-8参;</li>
+<li>在网页代码中加上一个”set names utf8”或者”set names gbk”的指令，告诉mysql连线内容都要使用 utf8或者gbk;</li>
+</ol>
+
+    
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="file_posts/mysql.html"
+           data-title="mysql 常用命令及常见问题和解决方法" data-url="https://hxfeng.github.io/file_posts/mysql.html">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.gif"
+               alt="hxfeng" />
+          <p class="site-author-name" itemprop="name">hxfeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">这是我的博客，记录我的工作和成长。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hxfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hxfeng.github.io/blog">hxfeng</a> 强力驱动
+</div>
+
+<div class="theme-info">
+ <!-- 主题 - -->
+  <a class="theme-link" href="https://hxfeng.github.io">
+   <!-- NexT.Pisces -->
+   我的博客
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hxfengds"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/blog/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/blog/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f461cb82049b156a480ab29cdb6d83bc";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

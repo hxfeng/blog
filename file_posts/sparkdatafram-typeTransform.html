@@ -1,0 +1,618 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content=",,,,," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="sparksql 的dataframe经常会遇到数据类型不合适，遇到这种情况就需要对数据的格式进行转换，spark提供了相应的转换方法">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="spark dataframe 数据类型转换">
+<meta property="og:url" content="https://hxfeng.github.io/file_posts/sparkdatafram-typeTransform.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="sparksql 的dataframe经常会遇到数据类型不合适，遇到这种情况就需要对数据的格式进行转换，spark提供了相应的转换方法">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-05-29T10:13:34.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark dataframe 数据类型转换">
+<meta name="twitter:description" content="sparksql 的dataframe经常会遇到数据类型不合适，遇到这种情况就需要对数据的格式进行转换，spark提供了相应的转换方法">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hxfeng.github.io/file_posts/sparkdatafram-typeTransform.html"/>
+
+
+
+
+
+  <title>
+  
+
+  
+    spark dataframe 数据类型转换 | 在路上
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">在路上</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">人不能太舒服，太舒服就会有问题，so解决问题ing</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">spark dataframe 数据类型转换</h1>
+
+
+
+</header>
+
+    
+    
+      <p>sparksql 的dataframe经常会遇到数据类型不合适，遇到这种情况就需要对数据的格式进行转换，spark提供了相应的转换方法<br><a id="more"></a><br><!-- Suppose I'm doing something like: --><br>比如下面这种情况每个字段都是String类型<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> df = sqlContext.load(<span class="string">"com.databricks.spark.csv"</span>, <span class="type">Map</span>(<span class="string">"path"</span> -&gt; <span class="string">"cars.csv"</span>, <span class="string">"header"</span> -&gt; <span class="string">"true"</span>))</span><br><span class="line">df.printSchema()</span><br><span class="line"></span><br><span class="line">root</span><br><span class="line"> |-- year: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- make: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- model: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- comment: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- blank: string (nullable = <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">df.show()</span><br><span class="line">year make  model comment              blank</span><br><span class="line"><span class="number">2012</span> <span class="type">Tesla</span> <span class="type">S</span>     <span class="type">No</span> comment                </span><br><span class="line"><span class="number">1997</span> <span class="type">Ford</span>  <span class="type">E350</span>  <span class="type">Go</span> get one now th...</span><br></pre></td></tr></table></figure></p>
+<!---but I really wanted the year as Int (and perhaps transform some other columns).-->
+<p>但是我希望year这一列的类型为数字类型,这个时候就可以用下面这种方式来转换：<br><!-- 
+The best I could come up with is
+--><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.withColumn(<span class="string">"year2"</span>, <span class="symbol">'year</span>.cast(<span class="string">"Int"</span>)).select(<span class="symbol">'year2</span> as <span class="symbol">'year</span>, <span class="symbol">'make</span>, <span class="symbol">'model</span>, <span class="symbol">'comment</span>, <span class="symbol">'blank</span>)</span><br><span class="line">org.apache.spark.sql.<span class="type">DataFrame</span> = [year: int, make: string, model: string, comment: string, blank: string]</span><br></pre></td></tr></table></figure></p>
+<!---
+which is a bit convoluted.
+
+I'm coming from R, and I'm used to being able to write, e.g.
+
+df2 <- df %>%
+   mutate(year = year %>% as.integer, 
+          make = make %>% toupper)
+I'm likely missing something, since there should be a better way to do this in spark/scala...
+Assuming you have an original df with the following schema:
+
+-->
+<p>如果我有一个df有下面这样的结构：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; df.printSchema</span><br><span class="line">root</span><br><span class="line"> |-- <span class="type">Year</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">Month</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">DayofMonth</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">DayOfWeek</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">DepDelay</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">Distance</span>: string (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- <span class="type">CRSDepTime</span>: string (nullable = <span class="literal">true</span>)</span><br></pre></td></tr></table></figure></p>
+<!--
+And some UDF's defined on one or several columns:
+-->
+<p>还有一些自定义的函数<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.sql.functions._</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> toInt    = udf[<span class="type">Int</span>, <span class="type">String</span>]( _.toInt)</span><br><span class="line"><span class="keyword">val</span> toDouble = udf[<span class="type">Double</span>, <span class="type">String</span>]( _.toDouble)</span><br><span class="line"><span class="keyword">val</span> toHour   = udf((t: <span class="type">String</span>) =&gt; <span class="string">"%04d"</span>.format(t.toInt).take(<span class="number">2</span>).toInt ) </span><br><span class="line"><span class="keyword">val</span> days_since_nearest_holidays = udf( </span><br><span class="line">  (year:<span class="type">String</span>, month:<span class="type">String</span>, dayOfMonth:<span class="type">String</span>) =&gt; year.toInt + <span class="number">27</span> + month.toInt<span class="number">-12</span></span><br><span class="line"> )</span><br></pre></td></tr></table></figure></p>
+<!--
+Changing column types or even building a new DataFrame from another can be written like this:
+-->
+<p>那么改变数据类型或者在已有的df上重新建立一个数据集的时候可以用一下方式：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> featureDf = df</span><br><span class="line">.withColumn(<span class="string">"departureDelay"</span>, toDouble(df(<span class="string">"DepDelay"</span>)))</span><br><span class="line">.withColumn(<span class="string">"departureHour"</span>,  toHour(df(<span class="string">"CRSDepTime"</span>)))</span><br><span class="line">.withColumn(<span class="string">"dayOfWeek"</span>,      toInt(df(<span class="string">"DayOfWeek"</span>)))              </span><br><span class="line">.withColumn(<span class="string">"dayOfMonth"</span>,     toInt(df(<span class="string">"DayofMonth"</span>)))              </span><br><span class="line">.withColumn(<span class="string">"month"</span>,          toInt(df(<span class="string">"Month"</span>)))              </span><br><span class="line">.withColumn(<span class="string">"distance"</span>,       toDouble(df(<span class="string">"Distance"</span>)))              </span><br><span class="line">.withColumn(<span class="string">"nearestHoliday"</span>, days_since_nearest_holidays(</span><br><span class="line">              df(<span class="string">"Year"</span>), df(<span class="string">"Month"</span>), df(<span class="string">"DayofMonth"</span>))</span><br><span class="line">            )              </span><br><span class="line">.select(<span class="string">"departureDelay"</span>, <span class="string">"departureHour"</span>, <span class="string">"dayOfWeek"</span>, <span class="string">"dayOfMonth"</span>, </span><br><span class="line">        <span class="string">"month"</span>, <span class="string">"distance"</span>, <span class="string">"nearestHoliday"</span>)            </span><br><span class="line"></span><br><span class="line">scala&gt; df.printSchema</span><br><span class="line">root</span><br><span class="line"> |-- departureDelay: double (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- departureHour: integer (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- dayOfWeek: integer (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- dayOfMonth: integer (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- month: integer (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- distance: double (nullable = <span class="literal">true</span>)</span><br><span class="line"> |-- nearestHoliday: integer (nullable = <span class="literal">true</span>)</span><br></pre></td></tr></table></figure></p>
+<!--
+This is pretty close to your own solution. Simply, keeping the type changes and other transformations as separate udf vals make the code more readable and re-usable.
+
+
+ince Spark version 1.4 you can apply the cast method with DataType on the column:
+
+-->
+<p>在spark1.4之后可以使用cast函数来转换数据类型<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.sql.types.<span class="type">IntegerType</span></span><br><span class="line"><span class="keyword">val</span> df2 = df.withColumn(<span class="string">"yearTmp"</span>, df.year.cast(<span class="type">IntegerType</span>))</span><br><span class="line">    .drop(<span class="string">"year"</span>)</span><br><span class="line">    .withColumnRenamed(<span class="string">"yearTmp"</span>, <span class="string">"year"</span>)</span><br><span class="line"><span class="type">If</span> you are using sql expressions you can also do:</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> df2 = df.selectExpr(<span class="string">"cast(year as int) year"</span>, </span><br><span class="line">                        <span class="string">"make"</span>, </span><br><span class="line">                        <span class="string">"model"</span>, </span><br><span class="line">                        <span class="string">"comment"</span>, </span><br><span class="line">                        <span class="string">"blank"</span>)</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.sql</span><br><span class="line">df.withColumn(<span class="string">"year"</span>, $<span class="string">"year"</span>.cast(sql.types.<span class="type">IntegerType</span>))</span><br><span class="line"><span class="keyword">val</span> df2 = df.select(</span><br><span class="line">   df.columns.map &#123;</span><br><span class="line">     <span class="keyword">case</span> year @ <span class="string">"year"</span> =&gt; df(year).cast(<span class="type">IntegerType</span>).as(year)</span><br><span class="line">     <span class="keyword">case</span> make @ <span class="string">"make"</span> =&gt; functions.upper(df(make)).as(make)</span><br><span class="line">     <span class="keyword">case</span> other         =&gt; df(other)</span><br><span class="line">   &#125;: _*</span><br><span class="line">)</span><br><span class="line">df.selectExpr(<span class="string">"cast(year as int) as year"</span>, <span class="string">"upper(make) as make"</span>, <span class="string">"model"</span>, <span class="string">"comment"</span>, <span class="string">"blank"</span>)</span><br><span class="line">df.withColumn(<span class="string">"col_name"</span>, df.col(<span class="string">"col_name"</span>).cast(<span class="type">DataTypes</span>.<span class="type">IntegerType</span>))</span><br><span class="line">df.select($<span class="string">"long_col"</span>.cast(<span class="type">IntegerType</span>).as(<span class="string">"int_col"</span>))</span><br></pre></td></tr></table></figure></p>
+<p>For more info check the docs:<a href="http://spark.apache.org/docs/1.6.0/api/scala/#org.apache.spark.sql.DataFrame" target="_blank" rel="noopener">spark.sql.Dataframe</a></p>
+
+    
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="file_posts/sparkdatafram-typeTransform.html"
+           data-title="spark dataframe 数据类型转换" data-url="https://hxfeng.github.io/file_posts/sparkdatafram-typeTransform.html">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.gif"
+               alt="hxfeng" />
+          <p class="site-author-name" itemprop="name">hxfeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">这是我的博客，记录我的工作和成长。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hxfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hxfeng.github.io/blog">hxfeng</a> 强力驱动
+</div>
+
+<div class="theme-info">
+ <!-- 主题 - -->
+  <a class="theme-link" href="https://hxfeng.github.io">
+   <!-- NexT.Pisces -->
+   我的博客
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hxfengds"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/blog/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/blog/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f461cb82049b156a480ab29cdb6d83bc";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

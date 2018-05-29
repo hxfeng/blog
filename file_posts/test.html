@@ -1,0 +1,602 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content=",,,,," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="工作中几乎每天都需要使用linux，刚开始接触linux觉得很高大上，适合装逼用，后面用着用着发现这东西不仅可以装逼还可以提高工作效率，开源界的各路高手为linux/unix写了非常多实用的小工具，这些工具配合起来使用可以极大的提升我们工作效率，今天主要记录一下join，cut,sort,paste,uniq,split 这几个小工具。">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="website">
+<meta property="og:title" content="linux 小工具使用技巧">
+<meta property="og:url" content="https://hxfeng.github.io/file_posts/test.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="工作中几乎每天都需要使用linux，刚开始接触linux觉得很高大上，适合装逼用，后面用着用着发现这东西不仅可以装逼还可以提高工作效率，开源界的各路高手为linux/unix写了非常多实用的小工具，这些工具配合起来使用可以极大的提升我们工作效率，今天主要记录一下join，cut,sort,paste,uniq,split 这几个小工具。">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-05-29T10:13:34.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux 小工具使用技巧">
+<meta name="twitter:description" content="工作中几乎每天都需要使用linux，刚开始接触linux觉得很高大上，适合装逼用，后面用着用着发现这东西不仅可以装逼还可以提高工作效率，开源界的各路高手为linux/unix写了非常多实用的小工具，这些工具配合起来使用可以极大的提升我们工作效率，今天主要记录一下join，cut,sort,paste,uniq,split 这几个小工具。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hxfeng.github.io/file_posts/test.html"/>
+
+
+
+
+
+  <title>
+  
+
+  
+    linux 小工具使用技巧 | 在路上
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">在路上</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">人不能太舒服，太舒服就会有问题，so解决问题ing</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">linux 小工具使用技巧</h1>
+
+
+
+</header>
+
+    
+    
+      <p>工作中几乎每天都需要使用linux，刚开始接触linux觉得很高大上，适合装逼用，后面用着用着发现这东西不仅可以装逼还可以提高工作效率，开源界的各路高手为linux/unix写了非常多实用的小工具，这些工具配合起来使用可以极大的提升我们工作效率，今天主要记录一下join，cut,sort,paste,uniq,split 这几个小工具。<br><a id="more"></a><br>首先跟大家说一下，linux下很多工作归根结底都是对文本的操作，比如我们要找到所有的文本文件，然后找到特定的内容保存。首先查找文本文件用到的是find,通过find我们可以找到很多路径，这些路径我们通过管道传递给grep awk join cut 这些小工具，作进一步的操作，最后将结果重定向到一个文件中保存。find awk grep这几个东西很强大我们后面会记录他的详细用法。</p>
+<h1 id="join的用法"><a href="#join的用法" class="headerlink" title="join的用法"></a>join的用法</h1><p>join 普通文件关联<br>首先看下join的文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">join --help</span><br><span class="line">Usage: join [OPTION]... FILE1 FILE2</span><br><span class="line">For each pair of input lines with identical join fields, write a line to</span><br><span class="line">standard output.  The default join field is the first, delimited</span><br><span class="line">by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.</span><br><span class="line"></span><br><span class="line">  -a FILENUM        also print unpairable lines from file FILENUM, where</span><br><span class="line">                      FILENUM is 1 or 2, corresponding to FILE1 or FILE2</span><br><span class="line">  -e EMPTY          replace missing input fields with EMPTY</span><br><span class="line">  -i, --ignore-case  ignore differences in case when comparing fields</span><br><span class="line">  -j FIELD          equivalent to &apos;-1 FIELD -2 FIELD&apos;</span><br><span class="line">  -o FORMAT         obey FORMAT while constructing output line</span><br><span class="line">  -t CHAR           use CHAR as input and output field separator</span><br><span class="line">  -v FILENUM        like -a FILENUM, but suppress joined output lines</span><br><span class="line">  -1 FIELD          join on this FIELD of file 1</span><br><span class="line">  -2 FIELD          join on this FIELD of file 2</span><br><span class="line">  --check-order     check that the input is correctly sorted, even</span><br><span class="line">                      if all input lines are pairable</span><br><span class="line">  --nocheck-order   do not check that the input is correctly sorted</span><br><span class="line">  --header          treat the first line in each file as field headers,</span><br><span class="line">                      print them without trying to pair them</span><br><span class="line">      --help     display this help and exit</span><br><span class="line">      --version  output version information and exit</span><br></pre></td></tr></table></figure></p>
+<p>上面这个 -1 -2 可以指定以那个字段为KEY来关联，这个也可以用-j来指定<br>比如我们有两个文件a.txt,b.txt<br>a.txt<br>1 22<br>2 33<br>3 44            </p>
+<p> b.txt<br> 1   a<br> 2   b<br> 3   c</p>
+<p>我们将两个文件关联到一起只需要一下操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">join  a.txt b.txt</span><br><span class="line"></span><br><span class="line">1 22 a</span><br><span class="line">2 33 b</span><br><span class="line">3 44 c</span><br></pre></td></tr></table></figure></p>
+<p>按列关联在一起哪个文件在前面那个列就在前面</p>
+<h1 id="paste-合并"><a href="#paste-合并" class="headerlink" title="paste 合并"></a>paste 合并</h1><p>比如我们有上面两个文件用paste来合并结果如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">paste a.txt b.txt</span><br><span class="line"></span><br><span class="line">1 22     1   a</span><br><span class="line">2 33     2   b</span><br><span class="line">3 44     3   c</span><br></pre></td></tr></table></figure></p>
+<p>paste也可以通过-s将文件按行来合并<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">paste -s a.txt  b.txt </span><br><span class="line">1 22    2 33    3 44</span><br><span class="line">1 a     2 b     3 c</span><br></pre></td></tr></table></figure></p>
+<p>paste-选项可以格式化输出内容，即对每一个（-），从标准输入中读一次数据。<br>join和paste都有其他参数比如下面会将两个文件以冒号分连接在一起：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">paste -d: a.txt b.txt</span><br><span class="line"></span><br><span class="line">1 22:1   a</span><br><span class="line">2 33:2   b</span><br><span class="line">3 44:3   c</span><br></pre></td></tr></table></figure>
+<h1 id="cut-切分"><a href="#cut-切分" class="headerlink" title="cut 切分"></a>cut 切分</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cut -d&quot; &quot; -f 1 a.txt </span><br><span class="line">1 </span><br><span class="line">2 </span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<p>f可以指定输出切分的字段，d可以指定字段分隔符</p>
+<h1 id="sort-排序"><a href="#sort-排序" class="headerlink" title="sort 排序"></a>sort 排序</h1><p>sort 可以对文件中的记录按照一定的规则排序<br>c.txt<br>1<br>3<br>5<br>7<br>11<br>2<br>4<br>6<br>10<br>8<br>9<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sort c.txt </span><br><span class="line">1</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td></tr></table></figure></p>
+<p>以字母序排列<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sort -n c.txt </span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td></tr></table></figure></p>
+<p>按照数字顺序进行排序，sort默认的是生序排列通过 r选项可以逆序排列。<br>其他选项如:<br>-k可以指定排序的字段，<br>-t可以指定字段分割符。<br>-f会将小写字母都转换为大写字母来进行比较，亦即忽略大小写<br>-c会检查文件是否已排好序，如果乱序，则输出第一个乱序的行的相关信息，最后返回1<br>-C会检查文件是否已排好序，如果乱序，不输出内容，仅返回1<br>-M会以月份来排序，比如JAN小于FEB等等<br>-b会忽略每一行前面的所有空白部分，从第一个可见字符开始比较。</p>
+<p>uniq 可以去掉文件中重复的列 其实sort的u选项也可以完成同样的操作.</p>
+<h1 id="split-和-dd-切分文件"><a href="#split-和-dd-切分文件" class="headerlink" title="split 和 dd 切分文件"></a>split 和 dd 切分文件</h1><p>split可以将大文件切割成小文件,但是使用起来不是很方便个人用的少不展开说了。</p>
+<p>dd 也可以完成切割我个人觉得他更优雅一些,下面是我对自己在打包docker镜像时的分割操作，当时是由于网站上传文件的大小限制太大了不能上传，所以用dd将其且分成小文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#dd if=ubunt.tar bs=1024 count=97000 skip=0  of=ubuntu.tar.1</span><br><span class="line">#dd if=ubunt.tar bs=1024 count=97000 skip=97000  of=ubuntu.tar.2</span><br><span class="line">#cat ubuntu.tar.1 ubuntu.tar.2 &gt; ubuntu.tar</span><br><span class="line">dd if=f21.tar bs=1024 count=97000 skip=0  of=fedora.tar.1</span><br><span class="line">dd if=f21.tar bs=1024 count=97000 skip=97000  of=fedora.tar.2</span><br><span class="line">dd if=f21.tar bs=1024 count=97000 skip=194000  of=fedora.tar.3</span><br><span class="line">dd if=mysql.tar bs=1024 count=97000 skip=0  of=mysql.tar.1</span><br><span class="line">dd if=mysql.tar bs=1024 count=97000 skip=97000  of=mysql.tar.2</span><br><span class="line">dd if=mysql.tar bs=1024 count=97000 skip=194000  of=mysql.tar.</span><br></pre></td></tr></table></figure></p>
+<p>其中bs表示写出块的大小，count表示写出块的数量，skip表示跳过多少个块，of表示输出文件，if表示输入文件.<br>这几个工具有很多种用法，恰当的使用可以提高效率。</p>
+
+    
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="file_posts/test.html"
+           data-title="linux 小工具使用技巧" data-url="https://hxfeng.github.io/file_posts/test.html">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.gif"
+               alt="hxfeng" />
+          <p class="site-author-name" itemprop="name">hxfeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">这是我的博客，记录我的工作和成长。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hxfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hxfeng.github.io/blog">hxfeng</a> 强力驱动
+</div>
+
+<div class="theme-info">
+ <!-- 主题 - -->
+  <a class="theme-link" href="https://hxfeng.github.io">
+   <!-- NexT.Pisces -->
+   我的博客
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hxfengds"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/blog/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/blog/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f461cb82049b156a480ab29cdb6d83bc";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

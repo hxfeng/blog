@@ -1,0 +1,762 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="如果不了解map，flatMap，zip和reduce函数，你就不能真正地谈论scala。通过这些函数，我们可以非常容易地处理列表的内容并结合Option对象工作。">
+<meta name="keywords" content="scala">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala 片段3：列表的map，flatMap，zip和reduce">
+<meta property="og:url" content="https://hxfeng.github.io/2017/08/31/scalab-md/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="如果不了解map，flatMap，zip和reduce函数，你就不能真正地谈论scala。通过这些函数，我们可以非常容易地处理列表的内容并结合Option对象工作。">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-05-29T10:13:34.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scala 片段3：列表的map，flatMap，zip和reduce">
+<meta name="twitter:description" content="如果不了解map，flatMap，zip和reduce函数，你就不能真正地谈论scala。通过这些函数，我们可以非常容易地处理列表的内容并结合Option对象工作。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hxfeng.github.io/2017/08/31/scalab-md/"/>
+
+
+
+
+
+  <title> Scala 片段3：列表的map，flatMap，zip和reduce | 在路上 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">在路上</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">人不能太舒服，太舒服就会有问题，so解决问题ing</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://hxfeng.github.io/blog/2017/08/31/scalab-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="hxfeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="在路上">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Scala 片段3：列表的map，flatMap，zip和reduce
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T07:27:05+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/blog/2017/08/31/scalab-md/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/31/scalab-md/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果不了解map，flatMap，zip和reduce函数，你就不能真正地谈论scala。通过这些函数，我们可以非常容易地处理列表的内容并结合Option对象工作。<br><a id="more"></a><br>让我们从map开始，通过map我们可以将一个函数应用于列表的每一个元素并且将其作为一个新的列表返回。<br>我们可以这样对列表的元素进行平方：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; list1</span><br><span class="line">res3: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; list1.map(x=&gt;x*x)</span><br><span class="line">res4: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>, <span class="number">36</span>, <span class="number">49</span>, <span class="number">64</span>, <span class="number">81</span>, <span class="number">100</span>)</span><br></pre></td></tr></table></figure></p>
+<p>一些函数可能返回Option元素。例如：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> evenify = (x:<span class="type">Int</span>) =&gt; <span class="keyword">if</span> (x % <span class="number">2</span> == <span class="number">0</span>) <span class="type">Some</span>(x) <span class="keyword">else</span> <span class="type">None</span></span><br><span class="line">evenify: <span class="type">Int</span> =&gt; <span class="type">Option</span>[<span class="type">Int</span>] = &lt;function1&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; list1.map(evenify)</span><br><span class="line">res6: <span class="type">List</span>[<span class="type">Option</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">Some</span>(<span class="number">0</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">2</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">4</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">6</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">8</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">10</span>))</span><br></pre></td></tr></table></figure></p>
+<p>这个例子的问题是我们常常并不关心None。但我们怎么轻松地把他排除出去呢？对于此我们可以使用flatMap。通过flatMap我们可以处理元素是序列的列表。将提供的函数应用于每个序列元素会返回包含原始列表所有序列内的元素的列表。通过以下的例子会更好理解：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> list3 = <span class="number">10</span> to <span class="number">20</span> toList</span><br><span class="line">list3: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> list2 = <span class="number">1</span> to <span class="number">10</span> toList</span><br><span class="line">list2: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> list4 = <span class="type">List</span>(list2, list3)</span><br><span class="line">list4: <span class="type">List</span>[<span class="type">List</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>), <span class="type">List</span>(<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">scala&gt; list4.flatMap(x=&gt;x.map(y=&gt;y*<span class="number">2</span>))</span><br><span class="line">res2: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">12</span>, <span class="number">14</span>, <span class="number">16</span>, <span class="number">18</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">22</span>, <span class="number">24</span>, <span class="number">26</span>, <span class="number">28</span>, <span class="number">30</span>, <span class="number">32</span>, <span class="number">34</span>, <span class="number">36</span>, <span class="number">38</span>, <span class="number">40</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到有list4的元素是两个列表。我们调用flatMap分别处理这两个列表，并用map将这两个列表的元素平方，最后的结果是一个包含所有元素的平坦的列表。</p>
+<p>译者注：flatMap并不一定用于元素是序列的列表，他只需要应用的函数返回的结果是GenTraversableOnce即可（列表的父类），例如：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">res0: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; res0.flatMap(x =&gt; <span class="number">1</span> to x )</span><br><span class="line">res1: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br></pre></td></tr></table></figure></p>
+<p>让我们回过头看一下一直看过的evenify函数和之前返回的Option列表：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> list1 = <span class="number">1</span> to <span class="number">10</span> toList</span><br><span class="line">list1: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; list1.map(evenify)</span><br><span class="line">res3: <span class="type">List</span>[<span class="type">Option</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">None</span>, <span class="type">Some</span>(<span class="number">2</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">4</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">6</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">8</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> list2 = list1.map(evenify)</span><br><span class="line">list2: <span class="type">List</span>[<span class="type">Option</span>[<span class="type">Int</span>]] = <span class="type">List</span>(<span class="type">None</span>, <span class="type">Some</span>(<span class="number">2</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">4</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">6</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">8</span>), <span class="type">None</span>, <span class="type">Some</span>(<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">scala&gt; list2.flatMap(x =&gt; x)</span><br><span class="line">res6: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<p>简单吧。我们也可以将这个写在一行：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; list1.flatMap(x=&gt;evenify(x))</span><br><span class="line">res14: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<p>正如你看到的，这并不困难。接下来让我们看一下其他两个可以用于列表的函数。第一个是zip，从它的名字就可以知道我们可以用此合并两个列表：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> list = <span class="string">"Hello.World"</span>.toCharArray</span><br><span class="line">list: <span class="type">Array</span>[<span class="type">Char</span>] = <span class="type">Array</span>(<span class="type">H</span>, e, l, l, o, ., <span class="type">W</span>, o, r, l, d)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> list1 = <span class="number">1</span> to <span class="number">20</span> toList</span><br><span class="line">list1: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; list.zip(list1)</span><br><span class="line">res30: <span class="type">Array</span>[(<span class="type">Char</span>, <span class="type">Int</span>)] = <span class="type">Array</span>((<span class="type">H</span>,<span class="number">1</span>), (e,<span class="number">2</span>), (l,<span class="number">3</span>), (l,<span class="number">4</span>), (o,<span class="number">5</span>), (.,<span class="number">6</span>), (<span class="type">W</span>,<span class="number">7</span>), (o,<span class="number">8</span>), (r,<span class="number">9</span>), (l,<span class="number">10</span>), (d,<span class="number">11</span>))</span><br><span class="line"></span><br><span class="line">scala&gt; list1.zip(list)</span><br><span class="line">res31: <span class="type">List</span>[(<span class="type">Int</span>, <span class="type">Char</span>)] = <span class="type">List</span>((<span class="number">1</span>,<span class="type">H</span>), (<span class="number">2</span>,e), (<span class="number">3</span>,l), (<span class="number">4</span>,l), (<span class="number">5</span>,o), (<span class="number">6</span>,.), (<span class="number">7</span>,<span class="type">W</span>), (<span class="number">8</span>,o), (<span class="number">9</span>,r), (<span class="number">10</span>,l), (<span class="number">11</span>,d))</span><br></pre></td></tr></table></figure></p>
+<p>返回的列表长度取决于较短的列表，只要有一个列表到达了末尾zip函数就停止了。我们可以使用zipAll函数来对较长列表的剩余元素进行处理：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; list.zipAll(list1,'a','<span class="number">1</span>')</span><br><span class="line">res33: <span class="type">Array</span>[(<span class="type">Char</span>, <span class="type">AnyVal</span>)] = <span class="type">Array</span>((<span class="type">H</span>,<span class="number">1</span>), (e,<span class="number">2</span>), (l,<span class="number">3</span>), (l,<span class="number">4</span>), (o,<span class="number">5</span>), (.,<span class="number">6</span>), (<span class="type">W</span>,<span class="number">7</span>), (o,<span class="number">8</span>), (r,<span class="number">9</span>), (l,<span class="number">10</span>), (d,<span class="number">11</span>), (a,<span class="number">12</span>), (a,<span class="number">13</span>), (a,<span class="number">14</span>), (a,<span class="number">15</span>), (a,<span class="number">16</span>), (a,<span class="number">17</span>), (a,<span class="number">18</span>), (a,<span class="number">19</span>), (a,<span class="number">20</span>))</span><br></pre></td></tr></table></figure></p>
+<p>(译者注：最后一个参数为1，让返回类型是Array[(Char,Int)]对于这个例子更好点)<br>如果字母的列表比较短，那么用’a’来补充，反之用1来补充。最后一个要介绍的zip函数是zipWithIndex。就像他的名字一样，元素的下标（从0开始）会被增加进去：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; list.zipWithIndex</span><br><span class="line">res36: <span class="type">Array</span>[(<span class="type">Char</span>, <span class="type">Int</span>)] = <span class="type">Array</span>((<span class="type">H</span>,<span class="number">0</span>), (e,<span class="number">1</span>), (l,<span class="number">2</span>), (l,<span class="number">3</span>), (o,<span class="number">4</span>), (.,<span class="number">5</span>), (<span class="type">W</span>,<span class="number">6</span>), (o,<span class="number">7</span>), (r,<span class="number">8</span>), (l,<span class="number">9</span>), (d,<span class="number">10</span>))</span><br></pre></td></tr></table></figure></p>
+<p>我们来看看最后一个函数：reduce。使用reduce我们可以处理列表的每个元素并返回一个值。通过使用reduceLeft和reduceRight我们可以强制处理元素的方向。（使用reduce方向是不被保证的）<br>译者注：reduce和fold很像，但reduce返回的值的类型必须和列表的元素类型相关（类型本身或其父类），但fold没有这种限制（但与此同时fold必须给定一个初始值），可以说reduce是fold的一种特殊情况。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; list1</span><br><span class="line">res51: <span class="type">List</span>[<span class="type">Int</span>] = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> sum = (x:<span class="type">Int</span>, y:<span class="type">Int</span>) =&gt; &#123;println(x,y) ; x + y&#125;</span><br><span class="line">sum: (<span class="type">Int</span>, <span class="type">Int</span>) =&gt; <span class="type">Int</span> = &lt;function2&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; list1.reduce(sum)</span><br><span class="line">(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">(<span class="number">6</span>,<span class="number">4</span>)</span><br><span class="line">(<span class="number">10</span>,<span class="number">5</span>)</span><br><span class="line">(<span class="number">15</span>,<span class="number">6</span>)</span><br><span class="line">(<span class="number">21</span>,<span class="number">7</span>)</span><br><span class="line">(<span class="number">28</span>,<span class="number">8</span>)</span><br><span class="line">(<span class="number">36</span>,<span class="number">9</span>)</span><br><span class="line">(<span class="number">45</span>,<span class="number">10</span>)</span><br><span class="line">(<span class="number">55</span>,<span class="number">11</span>)</span><br><span class="line">(<span class="number">66</span>,<span class="number">12</span>)</span><br><span class="line">(<span class="number">78</span>,<span class="number">13</span>)</span><br><span class="line">(<span class="number">91</span>,<span class="number">14</span>)</span><br><span class="line">(<span class="number">105</span>,<span class="number">15</span>)</span><br><span class="line">(<span class="number">120</span>,<span class="number">16</span>)</span><br><span class="line">(<span class="number">136</span>,<span class="number">17</span>)</span><br><span class="line">(<span class="number">153</span>,<span class="number">18</span>)</span><br><span class="line">(<span class="number">171</span>,<span class="number">19</span>)</span><br><span class="line">(<span class="number">190</span>,<span class="number">20</span>)</span><br><span class="line">res52: <span class="type">Int</span> = <span class="number">210</span></span><br><span class="line"></span><br><span class="line">scala&gt; list1.reduceLeft(sum)</span><br><span class="line">(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">(<span class="number">6</span>,<span class="number">4</span>)</span><br><span class="line">(<span class="number">10</span>,<span class="number">5</span>)</span><br><span class="line">(<span class="number">15</span>,<span class="number">6</span>)</span><br><span class="line">(<span class="number">21</span>,<span class="number">7</span>)</span><br><span class="line">(<span class="number">28</span>,<span class="number">8</span>)</span><br><span class="line">(<span class="number">36</span>,<span class="number">9</span>)</span><br><span class="line">(<span class="number">45</span>,<span class="number">10</span>)</span><br><span class="line">(<span class="number">55</span>,<span class="number">11</span>)</span><br><span class="line">(<span class="number">66</span>,<span class="number">12</span>)</span><br><span class="line">(<span class="number">78</span>,<span class="number">13</span>)</span><br><span class="line">(<span class="number">91</span>,<span class="number">14</span>)</span><br><span class="line">(<span class="number">105</span>,<span class="number">15</span>)</span><br><span class="line">(<span class="number">120</span>,<span class="number">16</span>)</span><br><span class="line">(<span class="number">136</span>,<span class="number">17</span>)</span><br><span class="line">(<span class="number">153</span>,<span class="number">18</span>)</span><br><span class="line">(<span class="number">171</span>,<span class="number">19</span>)</span><br><span class="line">(<span class="number">190</span>,<span class="number">20</span>)</span><br><span class="line">res53: <span class="type">Int</span> = <span class="number">210</span></span><br><span class="line"></span><br><span class="line">scala&gt; list1.reduceRight(sum)</span><br><span class="line">(<span class="number">19</span>,<span class="number">20</span>)</span><br><span class="line">(<span class="number">18</span>,<span class="number">39</span>)</span><br><span class="line">(<span class="number">17</span>,<span class="number">57</span>)</span><br><span class="line">(<span class="number">16</span>,<span class="number">74</span>)</span><br><span class="line">(<span class="number">15</span>,<span class="number">90</span>)</span><br><span class="line">(<span class="number">14</span>,<span class="number">105</span>)</span><br><span class="line">(<span class="number">13</span>,<span class="number">119</span>)</span><br><span class="line">(<span class="number">12</span>,<span class="number">132</span>)</span><br><span class="line">(<span class="number">11</span>,<span class="number">144</span>)</span><br><span class="line">(<span class="number">10</span>,<span class="number">155</span>)</span><br><span class="line">(<span class="number">9</span>,<span class="number">165</span>)</span><br><span class="line">(<span class="number">8</span>,<span class="number">174</span>)</span><br><span class="line">(<span class="number">7</span>,<span class="number">182</span>)</span><br><span class="line">(<span class="number">6</span>,<span class="number">189</span>)</span><br><span class="line">(<span class="number">5</span>,<span class="number">195</span>)</span><br><span class="line">(<span class="number">4</span>,<span class="number">200</span>)</span><br><span class="line">(<span class="number">3</span>,<span class="number">204</span>)</span><br><span class="line">(<span class="number">2</span>,<span class="number">207</span>)</span><br><span class="line">(<span class="number">1</span>,<span class="number">209</span>)</span><br><span class="line">res54: <span class="type">Int</span> = <span class="number">210</span></span><br></pre></td></tr></table></figure></p>
+<p>对于这个片段来说这些就足够了，是时候你自己探索一下List/Collections的API了。在下一个片段中，我们将看一些Scalaz的东西，虽然因为复杂对于这个库有些负面的声音，但它的确提供了一些很棒的特性。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/blog/images/mm.jpg" alt="hxfeng WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/blog/images/zfb.jpg" alt="hxfeng Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/scala/" rel="tag"># scala</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/08/30/scalaa/" rel="next" title="scala的fold和reduce">
+                <i class="fa fa-chevron-left"></i> scala的fold和reduce
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/08/31/scala-none/" rel="prev" title="scala Option、Some、None">
+                scala Option、Some、None <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/08/31/scalab-md/"
+           data-title="Scala 片段3：列表的map，flatMap，zip和reduce" data-url="https://hxfeng.github.io/2017/08/31/scalab-md/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.gif"
+               alt="hxfeng" />
+          <p class="site-author-name" itemprop="name">hxfeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">这是我的博客，记录我的工作和成长。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hxfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hxfeng.github.io/blog">hxfeng</a> 强力驱动
+</div>
+
+<div class="theme-info">
+ <!-- 主题 - -->
+  <a class="theme-link" href="https://hxfeng.github.io">
+   <!-- NexT.Pisces -->
+   我的博客
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hxfengds"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/blog/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/blog/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f461cb82049b156a480ab29cdb6d83bc";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

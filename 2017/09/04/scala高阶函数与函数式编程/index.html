@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="scala 是函数式编程语言，函数式编程是学术界一直倡导的一种编程模式，函数式编程模型符合数学的思维，比如一个符合函数f(g(x))，这种表达在数学上很常见，但是在命令编程模式下要做这样的表达就不是那么顺其自然，scala可以很好的进行函数式编程，当然支持函数式编程的语言有很多比如heskell，lisp，python等等，由于spark是用scala开发，自己是从事大数据开发的所以记录一点sca">
+<meta name="keywords" content="scala">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scala高阶函数与函数式编程">
+<meta property="og:url" content="https://hxfeng.github.io/2017/09/04/scala高阶函数与函数式编程/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="scala 是函数式编程语言，函数式编程是学术界一直倡导的一种编程模式，函数式编程模型符合数学的思维，比如一个符合函数f(g(x))，这种表达在数学上很常见，但是在命令编程模式下要做这样的表达就不是那么顺其自然，scala可以很好的进行函数式编程，当然支持函数式编程的语言有很多比如heskell，lisp，python等等，由于spark是用scala开发，自己是从事大数据开发的所以记录一点sca">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-05-29T10:13:34.626Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scala高阶函数与函数式编程">
+<meta name="twitter:description" content="scala 是函数式编程语言，函数式编程是学术界一直倡导的一种编程模式，函数式编程模型符合数学的思维，比如一个符合函数f(g(x))，这种表达在数学上很常见，但是在命令编程模式下要做这样的表达就不是那么顺其自然，scala可以很好的进行函数式编程，当然支持函数式编程的语言有很多比如heskell，lisp，python等等，由于spark是用scala开发，自己是从事大数据开发的所以记录一点sca">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hxfeng.github.io/2017/09/04/scala高阶函数与函数式编程/"/>
+
+
+
+
+
+  <title> scala高阶函数与函数式编程 | 在路上 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">在路上</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">人不能太舒服，太舒服就会有问题，so解决问题ing</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://hxfeng.github.io/blog/2017/09/04/scala高阶函数与函数式编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="hxfeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="在路上">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                scala高阶函数与函数式编程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-04T21:39:51+08:00">
+                2017-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/blog/2017/09/04/scala高阶函数与函数式编程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/04/scala高阶函数与函数式编程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>scala 是函数式编程语言，函数式编程是学术界一直倡导的一种编程模式，函数式编程模型符合数学的思维，比如一个符合函数f(g(x))，这种表达在数学上很常见，但是在命令编程模式下要做这样的表达就不是那么顺其自然，scala可以很好的进行函数式编程，当然支持函数式编程的语言有很多比如heskell，lisp，python等等，由于spark是用scala开发，自己是从事大数据开发的所以记录一点scala的函数是编程内容以便日后翻阅。<br><a id="more"></a></p>
+<h1 id="普通函数定义"><a href="#普通函数定义" class="headerlink" title="普通函数定义"></a>普通函数定义</h1><p>scala的函数定义类似python以def为关键字<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">语法</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">functionName</span> </span>([list of parameters]) : [<span class="keyword">return</span> <span class="class"><span class="keyword">type</span>] </span>= &#123;</span><br><span class="line">       function body</span><br><span class="line">          <span class="keyword">return</span> [expr]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">max</span></span>(a:<span class="type">Int</span>,b:<span class="type">Int</span>):<span class="type">Int</span>= &#123;</span><br><span class="line">    <span class="keyword">if</span> (a&gt;b)</span><br><span class="line">        a</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>scala 也可声明一个函数，只有参数列表和返回类型没有函数体。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">functionName</span> </span>([list of parameters]) : [<span class="keyword">return</span> <span class="class"><span class="keyword">type</span>]</span></span><br></pre></td></tr></table></figure></p>
+<p>scala 默认以函数最后一个表达式的值作为函数的返回值，scala不推荐使用return返回 没有返回值的函数在声明时需要将返回类型声明成Unit与java的void相同，函数式编程不推荐Unit返回 Scala允许指定函数的最后一个参数可重复。 这允许客户端将可变长度参数列表传递给函数。 这里，打印字符串函数里面的args类型，被声明为类型String加星号 ，实际上是Array [String]。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printStrings</span></span>( args:<span class="type">String</span>* ) = &#123;</span><br><span class="line">     <span class="keyword">var</span> i : <span class="type">Int</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">for</span>( arg &lt;- args )&#123;</span><br><span class="line">        println(<span class="string">"Arg value["</span> + i + <span class="string">"] = "</span> + arg );</span><br><span class="line">        i = i + <span class="number">1</span>;</span><br><span class="line">     &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在正常的函数调用中，调用的参数按照被调用函数定义的参数顺序逐个匹配。命名参数允许您以不同的顺序将参数传递给函数。语法只是每个参数前面都有一个参数名称和一个等号。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">      printInt(b = <span class="number">5</span>, a = <span class="number">7</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">printInt</span></span>( a:<span class="type">Int</span>, b:<span class="type">Int</span> ) = &#123;</span><br><span class="line">      println(<span class="string">"Value of a : "</span> + a );</span><br><span class="line">      println(<span class="string">"Value of b : "</span> + b );</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h1><p>Scala允许定义高阶函数。它是将其他函数作为参数或其结果是函数的函数，这也是scala实现函数式编程的方式。 下面代码中，apply()函数接受另一个函数f和值v，并将函数f应用于v。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">      println( apply( layout, <span class="number">10</span>) )</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(f: <span class="type">Int</span> =&gt; <span class="type">String</span>, v: <span class="type">Int</span>) = f(v)</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">layout</span></span>[<span class="type">A</span>](x: <span class="type">A</span>) = <span class="string">"["</span> + x.toString() + <span class="string">"]"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scala中的高阶函数有非常广泛的应用，几乎随处可见，比如map，filter，foreach等</p>
+<h1 id="柯里化函数"><a href="#柯里化函数" class="headerlink" title="柯里化函数"></a>柯里化函数</h1><p>柯里化函数可以有效的分解函数的复杂性，多个参数的函数可以通过柯里化更方便的使用，通过柯里化函数可以构造出许多偏函数,这里的偏函数不同于后面讲到的偏函数。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">strcat</span></span>(s1: <span class="type">String</span>)(s2: <span class="type">String</span>) = s1 + s2</span><br><span class="line">还可以使用以下语法定义柯里化(<span class="type">Currying</span>)函数 -</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">strcat</span></span>(s1: <span class="type">String</span>) = (s2: <span class="type">String</span>) =&gt; s1 + s2</span><br><span class="line">以下是调用柯里化(<span class="type">Currying</span>)函数的语法 -</span><br><span class="line">strcat(<span class="string">"foo"</span>)(<span class="string">"bar"</span>)</span><br><span class="line"></span><br><span class="line">这里所谓的偏函数</span><br><span class="line"><span class="keyword">val</span> preFoo=strcat(<span class="string">"foo"</span>)(_)</span><br><span class="line">preFoo是一个只接受一个参数的函数,这个时候strcat的第一个参数就是foo</span><br></pre></td></tr></table></figure></p>
+<h1 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h1><p>匿名函数在别的语言里面又叫lambda表达式，现在的java8也支持lambda表达式，python，lisp都支持lambda表达式，scala的匿名函数更简洁。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> gethead=x:<span class="type">List</span>[<span class="type">Any</span>]=&gt;x.head</span><br><span class="line"><span class="keyword">val</span> getMax=(a:<span class="type">Int</span>,b:<span class="type">Int</span>)=&gt;&#123;<span class="keyword">if</span> (a&gt;b)a <span class="keyword">else</span> b&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="偏函数"><a href="#偏函数" class="headerlink" title="偏函数"></a>偏函数</h1><p>如果你想定义一个函数，而让它只接受和处理其参数定义域范围内的子集，对于这个参数范围外的参数则抛出异常，这样的函数就是偏函数（顾名思异就是这个函数只处理传入来的部分参数）。 偏函数是个特质其的类型为PartialFunction[A,B],其中接收一个类型为A的参数，返回一个类型为B的结果。<br>偏函数其有个重要的函数就是：<br>def isDefinedAt(x: A): Boolean //作用是判断传入来的参数是否在这个偏函数所处理的范围内<br>定义一个普通的除法函数：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> divide = (x : <span class="type">Int</span>) =&gt; <span class="number">100</span>/x</span><br><span class="line">divide: <span class="type">Int</span> =&gt; <span class="type">Int</span> = &lt;function1&gt;</span><br><span class="line">输入参数<span class="number">0</span></span><br><span class="line">scala&gt; divide(<span class="number">0</span>)</span><br><span class="line">java.lang.<span class="type">ArithmeticException</span>: / by zero</span><br></pre></td></tr></table></figure></p>
+<p>显然，当我们将0作为参数传入时会报错，一般的解决办法就是使用try/catch来捕捉异常或者对参数进行判断看其是否等于0;但是在Scala的偏函数中这些都已经封装好了<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> divide = <span class="keyword">new</span> <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">Int</span>] &#123;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isDefinedAt</span></span>(x: <span class="type">Int</span>): <span class="type">Boolean</span> = x != <span class="number">0</span> <span class="comment">//判断x是否等于0，当x = 0时抛出异常</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(x: <span class="type">Int</span>): <span class="type">Int</span> = <span class="number">100</span>/x</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span>表达式更简洁</span><br><span class="line"><span class="keyword">val</span> divide1 : <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">Int</span>] = &#123;</span><br><span class="line"><span class="keyword">case</span> d : <span class="type">Int</span> <span class="keyword">if</span> d != <span class="number">0</span> =&gt; <span class="number">100</span>/d <span class="comment">//功能和上面的代码一样，这就是偏函数的强大之处，方便，简洁！！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>OrElse方法可以将多个偏函数组合起来使用，结合起来的效果类似case语句，但是每个偏函数里又可以再使用case<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> or1 : <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &#123;<span class="keyword">case</span> <span class="number">1</span> =&gt; <span class="string">"One"</span>&#125;</span><br><span class="line">or1: <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &lt;function1&gt;</span><br><span class="line">  </span><br><span class="line">scala&gt; <span class="keyword">val</span> or2 : <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &#123;<span class="keyword">case</span> <span class="number">2</span> =&gt; <span class="string">"Two"</span>&#125;</span><br><span class="line">or2: <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &lt;function1&gt;</span><br><span class="line">  </span><br><span class="line">scala&gt; <span class="keyword">val</span> or_ : <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &#123;<span class="keyword">case</span> _ =&gt; <span class="string">"Other"</span>&#125;</span><br><span class="line">or_: <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &lt;function1&gt;</span><br><span class="line">  </span><br><span class="line">scala&gt; <span class="keyword">val</span> or = or1 orElse or2 orElse or_ <span class="comment">//使用orElse将多个偏结合起来</span></span><br><span class="line">or: <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &lt;function1&gt;</span><br><span class="line">  </span><br><span class="line">scala&gt; or(<span class="number">1</span>)</span><br><span class="line">res7: <span class="type">String</span> = <span class="type">One</span></span><br><span class="line">  </span><br><span class="line">scala&gt; or(<span class="number">20</span>)</span><br><span class="line">res9: <span class="type">String</span> = <span class="type">Other</span></span><br><span class="line"></span><br><span class="line"><span class="type">OrElse</span> 直接与<span class="keyword">case</span>语句一起使用</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> orCase:(<span class="type">Int</span> =&gt; <span class="type">String</span>) = or1 orElse &#123;<span class="keyword">case</span> _ =&gt; <span class="string">"Other"</span>&#125;</span><br><span class="line">orCase: <span class="type">Int</span> =&gt; <span class="type">String</span> = &lt;function1&gt;</span><br><span class="line">  </span><br><span class="line">scala&gt; orCase(<span class="number">1</span>)</span><br><span class="line">res10: <span class="type">String</span> = <span class="type">One</span></span><br><span class="line">  </span><br><span class="line">scala&gt; orCase(<span class="number">10</span>)</span><br><span class="line">res11: <span class="type">String</span> = <span class="type">Other</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> one: <span class="type">PartialFunction</span>[<span class="type">Int</span>, <span class="type">String</span>] = &#123; <span class="keyword">case</span> <span class="number">1</span> =&gt; <span class="string">"one"</span> &#125;</span><br><span class="line">one: <span class="type">PartialFunction</span>[<span class="type">Int</span>,<span class="type">String</span>] = &lt;function1&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; one.isDefinedAt(<span class="number">1</span>)</span><br><span class="line">res0: <span class="type">Boolean</span> = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">scala&gt; one.isDefinedAt(<span class="number">2</span>)</span><br><span class="line">res1: <span class="type">Boolean</span> = <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="复合函数"><a href="#复合函数" class="headerlink" title="复合函数"></a>复合函数</h1><p>在数学中复合函数很常见，各种算子叠加使用，scala定义了compose和andthen来实现复合函数, compose先调用后面的g函数，将g函数的结果作为参数传给f函数，而andthen则顺序刚好相反<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">f</span></span>(a:<span class="type">Int</span>)=<span class="number">2</span>*a</span><br><span class="line">f: (a: <span class="type">Int</span>)<span class="type">Int</span></span><br><span class="line"></span><br><span class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">g</span></span>(b:<span class="type">Int</span>)=<span class="number">3</span>*b</span><br><span class="line">g: (b: <span class="type">Int</span>)<span class="type">Int</span></span><br><span class="line"></span><br><span class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">fComposeg=f</span> <span class="title">_</span> <span class="title">compose</span> <span class="title">g</span> <span class="title">_</span></span></span><br><span class="line"><span class="function"><span class="title">fComposeg</span></span>: <span class="type">Int</span> =&gt; <span class="type">Int</span></span><br><span class="line"></span><br><span class="line">scala&gt; fComposeg(<span class="number">1</span>)</span><br><span class="line">res8: <span class="type">Int</span> = <span class="number">6</span></span><br><span class="line"></span><br><span class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">fandTheng=f</span> <span class="title">_</span> <span class="title">compose</span> <span class="title">g</span> <span class="title">_</span></span></span><br><span class="line"><span class="function"><span class="title">scala&gt;</span> <span class="title">fandTheng</span></span>(<span class="number">1</span>)</span><br><span class="line">res8: <span class="type">Int</span> =<span class="number">6</span></span><br></pre></td></tr></table></figure></p>
+<p>下面这组代码更形象<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">val</span> fComposeG = f _ compose g _</span><br><span class="line">fComposeG: (<span class="type">String</span>) =&gt; java.lang.<span class="type">String</span> = &lt;function&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; fComposeG(<span class="string">"yay"</span>)</span><br><span class="line">res0: java.lang.<span class="type">String</span> = f(g(yay))</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">val</span> fAndThenG = f _ andThen g _</span><br><span class="line">fAndThenG: (<span class="type">String</span>) =&gt; java.lang.<span class="type">String</span> = &lt;function&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; fAndThenG(<span class="string">"yay"</span>)</span><br><span class="line">res1: java.lang.<span class="type">String</span> = g(f(yay))</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>scala中函数有很多的定义和使用方式，在实际工作中非常方便灵活，但是scala时用java写的所以scala也会收到jvm虚拟机的一些参数的影响，在scala开发的系统进行优化时不光要关注代码的简洁性亦要考虑效率，jvm参数的优化有时候会极大的提高程序的运行效率。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/blog/images/mm.jpg" alt="hxfeng WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/blog/images/zfb.jpg" alt="hxfeng Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/scala/" rel="tag"># scala</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/09/03/sparkdatafram-typeTransform/" rel="next" title="spark dataframe 数据类型转换">
+                <i class="fa fa-chevron-left"></i> spark dataframe 数据类型转换
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/09/05/贝叶斯算法原理/" rel="prev" title="贝叶斯算法原理">
+                贝叶斯算法原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/09/04/scala高阶函数与函数式编程/"
+           data-title="scala高阶函数与函数式编程" data-url="https://hxfeng.github.io/2017/09/04/scala高阶函数与函数式编程/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.gif"
+               alt="hxfeng" />
+          <p class="site-author-name" itemprop="name">hxfeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">这是我的博客，记录我的工作和成长。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#普通函数定义"><span class="nav-number">1.</span> <span class="nav-text">普通函数定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高阶函数"><span class="nav-number">2.</span> <span class="nav-text">高阶函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#柯里化函数"><span class="nav-number">3.</span> <span class="nav-text">柯里化函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#匿名函数"><span class="nav-number">4.</span> <span class="nav-text">匿名函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#偏函数"><span class="nav-number">5.</span> <span class="nav-text">偏函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复合函数"><span class="nav-number">6.</span> <span class="nav-text">复合函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hxfeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hxfeng.github.io/blog">hxfeng</a> 强力驱动
+</div>
+
+<div class="theme-info">
+ <!-- 主题 - -->
+  <a class="theme-link" href="https://hxfeng.github.io">
+   <!-- NexT.Pisces -->
+   我的博客
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hxfengds"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/blog/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/blog/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f461cb82049b156a480ab29cdb6d83bc";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
