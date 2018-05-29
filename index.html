@@ -357,22 +357,14 @@
 
       
         
-          
-            <h3 id="推荐适用国外主机"><a href="#推荐适用国外主机" class="headerlink" title="推荐适用国外主机"></a>推荐适用国外主机</h3><p><a href="https://www.vultr.com/" target="_blank" rel="noopener">https://www.vultr.com/</a></p>
-<p>#安装影梭<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://down.upx8.com/shell/shadowsocks-go.sh</span><br><span class="line">chmod +x shadowsocks-go.sh</span><br><span class="line">./shadowsocks-go.sh 2&gt;&amp;1 | tee shadowsocks-go.log</span><br></pre></td></tr></table></figure></p>
-<h3 id="卸载方法："><a href="#卸载方法：" class="headerlink" title="卸载方法："></a>卸载方法：</h3><p>./shadowsocks-go.sh uninstall</p>
-<h3 id="多端口多用户密码配置"><a href="#多端口多用户密码配置" class="headerlink" title="多端口多用户密码配置"></a>多端口多用户密码配置</h3><p>编辑配置文件  /etc/shadowsocks/config.json</p>
-<p>原有内容删除，插入以下配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="string">"server"</span>:<span class="string">"0.0.0.0"</span>,</span><br><span class="line"><span class="string">"local_address"</span>:<span class="string">"127.0.0.1"</span>,</span><br><span class="line"><span class="string">"local_port"</span>:1080,</span><br><span class="line"><span class="string">"port_password"</span>:&#123;</span><br><span class="line"><span class="string">"8989"</span>:<span class="string">"password"</span>,</span><br><span class="line"><span class="string">"7979"</span>:<span class="string">"password"</span>,</span><br><span class="line"><span class="string">"6969"</span>:<span class="string">"password"</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">"timeout"</span>:300,</span><br><span class="line"><span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line"><span class="string">"fast_open"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/shadowsocks restart</span><br></pre></td></tr></table></figure>
-<h3 id="常用命令："><a href="#常用命令：" class="headerlink" title="常用命令："></a>常用命令：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/shadowsocks start </span><br><span class="line">/etc/init.d/shadowsocks stop </span><br><span class="line">/etc/init.d/shadowsocks restart </span><br><span class="line">/etc/init.d/shadowsocks status</span><br></pre></td></tr></table></figure>
-<h3 id="防火墙端口打开"><a href="#防火墙端口打开" class="headerlink" title="防火墙端口打开"></a>防火墙端口打开</h3><p>如果只能用第一个账号，其他2个账号都不能用，那是防火墙对另外的端口做了限制，此时可以让防火墙不拦截 7979和6969端口</p>
-<p>具体命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=7979/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
-<p>这时候你可以试试7979的这个账号是不是可以用了<br>同样再设置6969<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=6969/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
-<p>如果有人问怎么用ss客户端登录，先去下载：<br><a href="https://github.com/shadowsocks/shadowsocks-windows/releases" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks-windows/releases</a></p>
-<p>安装后打开，然后设置，服务器地址和端口号记得对应</p>
-<p>然后代理模式选择PAC，这样省流量，你也可以全局，反正500G一个月足够用了： </p>
-
-          
+          <p>VPN 全名：虚拟专用网络。其功能是：在公用网络上建立专用网络，进行加密通讯。<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/blog/2018/05/29/vpn-install/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
